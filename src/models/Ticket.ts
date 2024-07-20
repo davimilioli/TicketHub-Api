@@ -13,7 +13,7 @@ interface TicketAttributes {
     prazo_ate: string
     status: string
     criado_em: string
-    atualizado_em: string
+    atualizado_em?: string
 };
 
 interface TicketCreationAttributes extends Optional<TicketAttributes, 'id'>{}
