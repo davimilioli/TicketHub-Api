@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import userRouters from './routes/userRouters';
+import ticketRouters from './routes/ticketRouters'
 dotenv.config()
 
 const server = Express();
@@ -12,7 +13,9 @@ const port = process.env.PORT || 3000;
 server.use(cors());
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json());
+
 server.use('/api/usuarios/', userRouters);
+server.use('/api/tickets/', ticketRouters);
 
 async function initServer(){
     try {
