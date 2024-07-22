@@ -15,7 +15,7 @@ server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json());
 
 server.use('/api/usuarios/', userRouters);
-server.use('/api/tickets/', ticketRouters);
+server.use('/api/ticket/', ticketRouters);
 
 async function initServer(){
     try {
@@ -24,7 +24,7 @@ async function initServer(){
         await sequelize.sync();
 
         server.listen(port, () => {
-            console.log('Servidor rodando')
+            console.log(`Servidor rodando na porta ${port}`);
         })
 
     } catch(error){
