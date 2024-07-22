@@ -4,5 +4,6 @@ import TicketController from "../controllers/ticketController";
 const router = Router();
 
 router.post('/', TicketController.create);
+router.post('/log', TicketController.createLog);
 
 export default router;

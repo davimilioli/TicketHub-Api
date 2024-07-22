@@ -39,17 +39,36 @@ class TicketController {
         }
     }
 
-/*     id?: number
-    id_usuario: number
-    solicitante: string
-    titulo: string
-    descricao: string
-    prioridade: string
-    prazo_de: string
-    prazo_ate: string
-    status: string
-    criado_em: string
-    atualizado_em: string */
+    static async createLog(req: Request, res: Response): Promise<void> {
+        const { id_ticket, usuario, descricao, tipo } = req.body;
+        const para = req.body.para ? req.body.para : '';
+        const date = new Date().toString();
+
+        console.log(req.body)
+ 
+        try {
+
+            const newLog = await TicketLog.create({
+                id_ticket,
+                usuario,
+                descricao,
+                tipo,
+                para,
+                criado_em: date
+            });
+
+            res.status(201).json({
+                mensagem: 'Log criado com sucesso!',
+                ticket: newLog
+            });
+
+        } catch(error){
+            console.log(error);
+            res.status(500).json({
+                mensagem: 'Ocorreu algum erro ao criar o log',
+            })
+        } 
+    }
 
 }
 
