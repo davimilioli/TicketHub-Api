@@ -9,6 +9,8 @@ interface TicketLogAttributes {
     data: string
     tipo: string
     para?: string
+    criado_em: string
+    atualizado_em?: string
 }
 
 interface TicketLogCreationAttributes extends Optional<TicketLogAttributes, 'id'> {}
@@ -20,6 +22,8 @@ class TicketLog extends Model<TicketLogAttributes, TicketLogCreationAttributes> 
     public data!: string
     public tipo!: string
     public para!: string
+    public criado_em!: string
+    public atualizado_em!: string
 }
 
 TicketLog.init(
@@ -52,6 +56,14 @@ TicketLog.init(
         para: {
             type: DataTypes.STRING,
             allowNull: true,
+        },
+        criado_em: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        },
+        atualizado_em: {
+            type: DataTypes.DATE,
+            allowNull: true
         },
     },
     {
