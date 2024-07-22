@@ -6,7 +6,6 @@ interface TicketLogAttributes {
     id?: number
     id_ticket: number
     usuario: string
-    data: string
     tipo: string
     para?: string
     criado_em: string
@@ -19,7 +18,6 @@ class TicketLog extends Model<TicketLogAttributes, TicketLogCreationAttributes> 
     public id!: number
     public id_ticket!: number
     public usuario!: string
-    public data!: string
     public tipo!: string
     public para!: string
     public criado_em!: string
@@ -42,10 +40,6 @@ TicketLog.init(
             }
         },
         usuario: {
-            type: DataTypes.STRING,
-            allowNull: false,
-          },
-        data: {
             type: DataTypes.STRING,
             allowNull: false,
         },
