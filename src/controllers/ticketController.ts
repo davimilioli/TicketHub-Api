@@ -70,6 +70,32 @@ class TicketController {
         } 
     }
 
+    static async get(req: Request, res: Response): Promise<void> {
+        const id:number = parseInt(req.params.id);
+
+        try {
+
+            const ticket = await Ticket.findByPk(id);
+
+            if(!ticket){
+                res.status(404).json({ mensagem: `Ticket ${id} não encontrado` });
+                return;
+            }
+
+            const ticketLog = await TicketLog.findAll({  where: { id_ticket: id } });
+
+            res.status(200).json({
+                ticket,
+                historico: ticketLog
+            })
+
+        } catch (error){
+            res.status(500).json({
+                mensagem: 'Ocorreu algum erro ao consultar o ticket',
+            })
+        }
+        
+    }
 }
 
 export default TicketController
