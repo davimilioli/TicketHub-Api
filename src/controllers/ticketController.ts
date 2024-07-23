@@ -85,7 +85,7 @@ class TicketController {
             const ticketLog = await TicketLog.findAll({  where: { id_ticket: id } });
 
             res.status(200).json({
-                ticket,
+                ...ticket.toJSON(),
                 historico: ticketLog
             })
 
