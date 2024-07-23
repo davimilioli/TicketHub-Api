@@ -96,6 +96,47 @@ class TicketController {
         }
         
     }
+
+    static async getAll(req: Request, res: Response): Promise<void> {
+        const page: number = parseInt(req.query.page as string) || 1;
+        const pageSize: number = parseInt(req.query.pageSize as string) || 12;
+
+        try {
+
+            const offset = (page - 1) * pageSize;
+
+            const { rows: tickets, count: total } = await Ticket.findAndCountAll({
+                offset: offset,
+                limit: pageSize,
+                order: [['id', 'ASC']]
+            });
+
+            const ticketContainsLog = await Promise.all(tickets.map(async ticket => {
+                const ticketLog = await TicketLog.findAll({ where: { id_ticket: ticket.id } });
+                return {
+                    ...ticket.toJSON(),
+                    historico: ticketLog
+                }
+            }));
+
+            const result = {
+                total,
+                page,
+                pageSize,
+                tickets: ticketContainsLog,
+            }
+
+            res.status(200).json(result);
+
+        } catch (error){
+            res.status(500).json({
+                mensagem: 'Ocorreu algum erro ao consultar os tickets',
+            })
+        }
+        
+    }
+
+
 }
 
 export default TicketController
