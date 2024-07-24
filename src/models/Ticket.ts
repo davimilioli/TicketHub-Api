@@ -8,10 +8,10 @@ interface TicketAttributes {
     solicitante: string
     titulo: string
     descricao: string
-    prioridade: string
+    prioridade: 'Baixa' | 'Normal' | 'Alta' | 'Urgente'
     prazo_de: string
     prazo_ate: string
-    status: string
+    status: 'Ativo' | 'Inativo'
     criado_em: string
     atualizado_em?: string
 };
@@ -24,10 +24,10 @@ class Ticket extends Model<TicketAttributes, TicketCreationAttributes> implement
     public solicitante!: string
     public titulo!: string
     public descricao!: string
-    public prioridade!: string
+    public prioridade!: 'Baixa' | 'Normal' | 'Alta' | 'Urgente'
     public prazo_de!: string
     public prazo_ate!: string
-    public status!: string
+    public status!: 'Ativo' | 'Inativo'
     public criado_em!: string
     public atualizado_em!: string
 }

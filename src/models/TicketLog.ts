@@ -7,7 +7,7 @@ interface TicketLogAttributes {
     id_ticket: number
     usuario: string
     descricao: string
-    tipo: string
+    tipo: 'Mensagem' | 'Entrega Final' | 'Altera Responsabilidade'
     para?: string
     criado_em: string
     atualizado_em?: string
@@ -20,7 +20,7 @@ class TicketLog extends Model<TicketLogAttributes, TicketLogCreationAttributes> 
     public id_ticket!: number
     public usuario!: string
     public descricao!: string
-    public tipo!: string
+    public tipo!: 'Mensagem' | 'Entrega Final' | 'Altera Responsabilidade'
     public para!: string
     public criado_em!: string
     public atualizado_em!: string
