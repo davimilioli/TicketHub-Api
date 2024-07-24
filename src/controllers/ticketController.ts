@@ -136,6 +136,30 @@ class TicketController {
         
     }
 
+    static async delete(req: Request, res: Response): Promise<void>{
+        const id: number = parseInt(req.params.id);
+        
+        try {
+
+            const ticket = await Ticket.destroy({ where: {id} });
+
+
+            if(ticket === 0){
+                res.status(404).json({ mensagem: `Ticket ${id} não encontrado` });
+                return;
+            }
+
+            await TicketLog.destroy({ where: { id_ticket: id } });
+
+            res.status(200).json({ mensagem: `Ticket ${id} excluido` });
+
+        } catch(error){
+            res.status(500).json({
+                mensagem: 'Ocorreu algum erro ao deletar o ticket',
+            });
+        }
+    }
+
 
 }
 
