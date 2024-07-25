@@ -160,6 +160,44 @@ class TicketController {
         }
     }
 
+    static async transferTicket(req: Request, res: Response) {
+        const id_solicitado: number = parseInt(req.body.id_solicitado);
+        const id_ticket: number = parseInt(req.body.id_ticket);
+        const id_transfer: number = parseInt(req.body.id_transfer);
+
+        try {
+            const ticket = await Ticket.findByPk(id_ticket);
+
+            if (!ticket) {
+                res.status(404).json({
+                    mensagem: 'Ticket não encontrado',
+                });
+
+                return;
+            }
+
+            if (ticket.id_usuario !== id_solicitado) {
+                res.status(403).json({
+                    mensagem: 'Usuário não tem permissão para transferir este ticket',
+                });
+
+                return;
+            }
+
+            ticket.id_usuario = id_transfer;
+            await ticket.save();
+
+            res.status(200).json({
+                mensagem: 'Ticket transferido com sucesso',
+            });
+
+        } catch(error){
+            console.log(error)
+            res.status(500).json({
+                mensagem: 'Ocorreu algum erro ao transferir o ticket',
+            });
+        }
+    }
 
 }
 
