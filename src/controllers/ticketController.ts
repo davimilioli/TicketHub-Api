@@ -40,11 +40,8 @@ class TicketController {
     }
 
     static async createLog(req: Request, res: Response): Promise<void> {
-        const { id_ticket, usuario, descricao, tipo } = req.body;
-        const para = req.body.para ? req.body.para : '';
+        const { id_ticket, usuario, descricao, tipo, para = '' } = req.body;
         const date = new Date().toString();
-
-        console.log(req.body)
  
         try {
 
@@ -119,14 +116,12 @@ class TicketController {
                 }
             }));
 
-            const result = {
+            res.status(200).json({
                 total,
                 page,
                 pageSize,
                 tickets: ticketContainsLog,
-            }
-
-            res.status(200).json(result);
+            });
 
         } catch (error){
             res.status(500).json({
@@ -200,10 +195,10 @@ class TicketController {
     }
 
     static async update(req: Request, res: Response): Promise<void> {
-        const id_ticket: number = parseInt(req.params.id_ticket);
-        const id_usuario: number = parseInt(req.body.id_usuario);
+        const id_ticket = parseInt(req.params.id_ticket);
+        const id_usuario = parseInt(req.body.id_usuario);
         const { titulo, descricao, prioridade, status } = req.body;
-        const date: string = new Date().toString();
+        const date = new Date().toISOString();
 
         try {
             const ticket = await Ticket.findByPk(id_ticket);
@@ -217,6 +212,7 @@ class TicketController {
             }
 
             if (ticket.id_usuario !== id_usuario) {
+                console.log('ID Ticket:', ticket.id_usuario, 'ID usuario:', id_usuario)
                 res.status(403).json({
                     mensagem: 'Usuário não tem permissão para editar este ticket',
                 });
@@ -224,31 +220,20 @@ class TicketController {
                 return;
             }
 
-            const updateTicket: { [key: string]: any } = { atualizado_em: date };
+            const updateTicket: Partial<typeof ticket> = { atualizado_em: date };
 
-            if(titulo !== undefined){
-                ticket.titulo = titulo;
-            }
-
-            if(descricao !== undefined){
-                ticket.descricao = descricao;
-            }
-
-            if(prioridade !== undefined){
-                ticket.prioridade = prioridade;
-            }
-
-            if(status !== undefined){
-                ticket.status = status;
-            }
+            if (titulo !== undefined) updateTicket.titulo = titulo;
+            if (descricao !== undefined) updateTicket.descricao = descricao;
+            if (prioridade !== undefined) updateTicket.prioridade = prioridade;
+            if (status !== undefined) updateTicket.status = status;
 
             const [result] = await Ticket.update(updateTicket, {
                 where: { id: id_ticket },
             });
 
             if (result === 0) {
-                res.status(500).json({
-                    mensagem: 'Ocorreu algum erro ao atualizar o ticket',
+                res.status(404).json({
+                    mensagem: 'Ticket não encontrado',
                 });
 
                 return;
@@ -256,7 +241,7 @@ class TicketController {
 
             res.status(200).json({
                 mensagem: 'Ticket atualizado com sucesso',
-                ticket: ticket,
+                ticket: updateTicket,
             });
 
         } catch (error) {
