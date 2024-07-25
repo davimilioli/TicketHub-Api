@@ -199,6 +199,73 @@ class TicketController {
         }
     }
 
+    static async update(req: Request, res: Response): Promise<void> {
+        const id_ticket: number = parseInt(req.params.id_ticket);
+        const id_usuario: number = parseInt(req.body.id_usuario);
+        const { titulo, descricao, prioridade, status } = req.body;
+        const date: string = new Date().toString();
+
+        try {
+            const ticket = await Ticket.findByPk(id_ticket);
+
+            if (!ticket) {
+                res.status(404).json({
+                    mensagem: 'Ticket não encontrado',
+                });
+
+                return;
+            }
+
+            if (ticket.id_usuario !== id_usuario) {
+                res.status(403).json({
+                    mensagem: 'Usuário não tem permissão para editar este ticket',
+                });
+
+                return;
+            }
+
+            const updateTicket: { [key: string]: any } = { atualizado_em: date };
+
+            if(titulo !== undefined){
+                ticket.titulo = titulo;
+            }
+
+            if(descricao !== undefined){
+                ticket.descricao = descricao;
+            }
+
+            if(prioridade !== undefined){
+                ticket.prioridade = prioridade;
+            }
+
+            if(status !== undefined){
+                ticket.status = status;
+            }
+
+            const [result] = await Ticket.update(updateTicket, {
+                where: { id: id_ticket },
+            });
+
+            if (result === 0) {
+                res.status(500).json({
+                    mensagem: 'Ocorreu algum erro ao atualizar o ticket',
+                });
+
+                return;
+            }
+
+            res.status(200).json({
+                mensagem: 'Ticket atualizado com sucesso',
+                ticket: ticket,
+            });
+
+        } catch (error) {
+            res.status(500).json({
+                mensagem: 'Ocorreu algum erro ao atualizar o ticket',
+            });
+        }
+    }
+
 }
 
 export default TicketController

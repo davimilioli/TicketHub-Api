@@ -9,5 +9,6 @@ router.get('/:id', TicketController.get);
 router.get('/', TicketController.getAll);
 router.delete('/:id', TicketController.delete);
 router.put('/transfer', TicketController.transferTicket);
+router.put('/:id_ticket', TicketController.update);
 
 export default router;
