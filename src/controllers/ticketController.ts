@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Ticket from "../models/Ticket";
 import TicketLog from "../models/TicketLog";
+import User from "../models/User";
 
 class TicketController {
 
@@ -159,6 +160,7 @@ class TicketController {
         const id_solicitado: number = parseInt(req.body.id_solicitado);
         const id_ticket: number = parseInt(req.body.id_ticket);
         const id_transfer: number = parseInt(req.body.id_transfer);
+        const date = new Date().toISOString();
 
         try {
             const ticket = await Ticket.findByPk(id_ticket);
@@ -179,9 +181,29 @@ class TicketController {
                 return;
             }
 
-            ticket.id_usuario = id_transfer;
-            await ticket.save();
+            const requestUser = await User.findByPk(ticket.id_usuario);
+            const newUser = await User.findByPk(id_transfer);
 
+            if (!requestUser || !newUser) {
+                res.status(404).json({
+                    mensagem: 'Usuário não encontrado',
+                });
+                return;
+            }
+
+            ticket.id_usuario = id_transfer;
+            ticket.atualizado_em = date;
+            await ticket.save();
+            
+            await TicketLog.create({
+                id_ticket,
+                usuario: requestUser.nome,
+                descricao: `Ticket transferido para o usuário ${newUser.nome}`,
+                tipo: 'Altera Responsabilidade',
+                para: newUser.nome,
+                criado_em: date
+            });
+            
             res.status(200).json({
                 mensagem: 'Ticket transferido com sucesso',
             });
