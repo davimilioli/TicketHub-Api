@@ -36,6 +36,7 @@ class TicketController {
         } catch(error){
             res.status(500).json({
                 mensagem: 'Ocorreu algum erro ao criar o ticket',
+                error
             });
         }
     }
