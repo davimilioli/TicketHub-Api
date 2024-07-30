@@ -11,7 +11,7 @@ class TicketController {
 
         try {
 
-            if (!id_usuario || !solicitante || !titulo || !descricao || !prioridade || !prazo_de || !prazo_ate || !status) {
+            if (!id_usuario || !solicitante || !titulo || !descricao || !prioridade || !prazo_ate || !status) {
                 res.status(400).json({ message: "Todos os campos são obrigatórios" });
                 return;
             }
@@ -22,7 +22,7 @@ class TicketController {
                 titulo,
                 descricao,
                 prioridade,
-                prazo_de,
+                prazo_de: prazo_de ? prazo_de : date,
                 prazo_ate,
                 status,
                 criado_em: date,
@@ -35,7 +35,7 @@ class TicketController {
 
         } catch(error){
             res.status(500).json({
-                mensagem: 'Ocorreu algum erro ao atualizar usuário',
+                mensagem: 'Ocorreu algum erro ao criar o ticket',
             });
         }
     }
