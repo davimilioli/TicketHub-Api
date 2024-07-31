@@ -58,7 +58,7 @@ class TicketController {
 
             res.status(201).json({
                 mensagem: 'Log criado com sucesso!',
-                ticket: newLog
+                log: newLog
             });
 
         } catch(error){
