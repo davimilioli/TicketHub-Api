@@ -220,7 +220,7 @@ class TicketController {
     static async update(req: Request, res: Response): Promise<void> {
         const id_ticket = parseInt(req.params.id_ticket);
         const id_usuario = parseInt(req.body.id_usuario);
-        const { titulo, descricao, prioridade, status } = req.body;
+        const { titulo, descricao, prioridade, status, prazo_de, prazo_ate } = req.body;
         const date = new Date().toISOString();
 
         try {
@@ -248,7 +248,12 @@ class TicketController {
             if (titulo !== undefined) updateTicket.titulo = titulo;
             if (descricao !== undefined) updateTicket.descricao = descricao;
             if (prioridade !== undefined) updateTicket.prioridade = prioridade;
-            if (status !== undefined) updateTicket.status = status;
+            if (status !== undefined) updateTicket.status = status; 
+            if (prazo_de !== undefined) updateTicket.prazo_de = prazo_de
+            if (prazo_ate !== undefined) updateTicket.prazo_ate = prazo_ate
+
+            updateTicket.solicitante = ticket.solicitante
+            updateTicket.criado_em = ticket.criado_em
 
             const [result] = await Ticket.update(updateTicket, {
                 where: { id: id_ticket },
